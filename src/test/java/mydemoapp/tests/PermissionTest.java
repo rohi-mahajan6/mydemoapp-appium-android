@@ -46,13 +46,16 @@ public class PermissionTest extends BaseTest {
         Allure.addAttachment("Dialog message", dialog.message());
         dialog.deny();
 
-        // QRFragment asks from two places (when the view is set up and in onResume), so a second
-        // request can follow the first. Answer it the same way and record how many were shown.
+        // QRFragment asks from two places (when the view is set up and in onResume), and CI run
+        // 45447987289 showed a second dialog over the catalog after the first denial. Deny every
+        // dialog until none is left (at most 3), and record how many were shown.
         int dialogs = 1;
-        while (dialogs < 3 && dialog.isShown(Duration.ofSeconds(3))) {
+        while (dialogs < 3 && dialog.isShown(Duration.ofSeconds(5))) {
+            Allure.addAttachment("Dialog " + (dialogs + 1) + " message", dialog.message());
             dialog.deny();
             dialogs++;
         }
+        assertFalse(dialog.isShown(Duration.ofSeconds(3)), "no permission dialog left after " + dialogs + " denial(s)");
         Allure.addAttachment("Camera permission dialogs shown", String.valueOf(dialogs));
 
         assertTrue(catalog.isShown(Duration.ofSeconds(10)), "catalog shown after denying the camera");
@@ -62,7 +65,7 @@ public class PermissionTest extends BaseTest {
     @Test(description = "Location allowed (Precise): the screen shows the emulator's GPS position")
     @Description("Revoke location, open Geo Location, choose Precise and While using the app, set the "
             + "device position through Appium, and check that latitudeTV / longitudeTV show it.")
-    public void locationAllowedShowsCoordinates() {
+    public void locationAllowedShowsCoordinates() throws InterruptedException {
         List<String> location = List.of(AppControl.FINE_LOCATION, AppControl.COARSE_LOCATION);
         app.revoke(location);
         List<String> before = app.grantedPermissions();
@@ -82,8 +85,8 @@ public class PermissionTest extends BaseTest {
         assertTrue(dialog.preciseSelected(), "Precise selected");
         dialog.allowWhileUsing();
 
-        List<String> after = app.grantedPermissions();
-        assertTrue(after.contains(AppControl.FINE_LOCATION), "fine (precise) location granted");
+        assertTrue(app.waitForGranted(AppControl.FINE_LOCATION, Duration.ofSeconds(10)), "fine (precise) location granted");
+        assertTrue(app.grantedPermissions().contains(AppControl.COARSE_LOCATION), "coarse location granted with it");
         assertTrue(page.isShown(), "geo location screen shown");
 
         // Set the position again now that the app listens, then ask the app to observe.

@@ -38,10 +38,18 @@ public class CatalogPage extends BasePage {
         return new Product(names.get(index).getText(), prices.get(index).getText());
     }
 
+    /**
+     * Only the product image is clickable (ProductsAdapter sets the listener on productIV; titleTV
+     * has clickable=false). The tile is found by its title, then its image is tapped: title and
+     * image are siblings in the same tile.
+     */
     @Step("Open product \"{name}\"")
     public ProductDetailPage open(String name) {
+        String title = "new UiSelector().resourceIdMatches(\".*:id/titleTV\").text(\"" + name + "\")";
+        visible(AppiumBy.androidUIAutomator(
+                "new UiScrollable(new UiSelector().scrollable(true).instance(0)).scrollIntoView(" + title + ")"));
         tap(AppiumBy.androidUIAutomator(
-                "new UiSelector().resourceIdMatches(\".*:id/titleTV\").text(\"" + name + "\")"));
+                title + ".fromParent(new UiSelector().resourceIdMatches(\".*:id/productIV\"))"));
         return new ProductDetailPage(driver).waitUntilShown();
     }
 

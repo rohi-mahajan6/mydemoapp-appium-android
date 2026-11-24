@@ -21,7 +21,9 @@ public class SystemPermissionDialog extends BasePage {
     private static final By MESSAGE = idSuffix("permission_message");
     private static final By ALLOW_WHILE_USING = idSuffix("permission_allow_foreground_only_button");
     private static final By ALLOW_ONCE = idSuffix("permission_allow_one_time_button");
-    private static final By DENY = idSuffix("permission_deny_button");
+    // First request: permission_deny_button. A repeated request (Android 11+) shows the same
+    // "Don't allow" label on permission_deny_and_dont_ask_again_button (seen in CI run 45447987289).
+    private static final By DENY = idSuffix("permission_deny(_and_dont_ask_again)?_button");
     private static final By PRECISE = idSuffix("permission_location_accuracy_radio_fine");
     private static final By APPROXIMATE = idSuffix("permission_location_accuracy_radio_coarse");
 

@@ -63,6 +63,23 @@ public final class AppControl {
         return (List<String>) result;
     }
 
+    /**
+     * Polls until the permission shows as granted. The permission controller records a grant
+     * shortly after the dialog button is tapped (CI run 45447987289: the check ran ~20 ms before the
+     * grant was logged), so a single check right after the tap can miss it.
+     */
+    @Step("Wait until {permission} is granted")
+    public boolean waitForGranted(String permission, java.time.Duration within) throws InterruptedException {
+        long deadline = System.nanoTime() + within.toNanos();
+        do {
+            if (grantedPermissions().contains(permission)) {
+                return true;
+            }
+            Thread.sleep(500);
+        } while (System.nanoTime() < deadline);
+        return grantedPermissions().contains(permission);
+    }
+
     @Step("Set the device GPS position to {latitude}, {longitude}")
     public void setGeolocation(double latitude, double longitude) {
         driver.executeScript("mobile: setGeolocation", Map.of(
