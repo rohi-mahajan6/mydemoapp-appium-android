@@ -109,6 +109,12 @@ public class CheckoutPage extends BasePage {
         return visible(CONTINUE_SHOPPING).isDisplayed();
     }
 
+    /** CheckoutCompleteFragment empties the cart only here, not when the order is placed. */
+    @Step("Continue shopping")
+    public void continueShopping() {
+        tap(CONTINUE_SHOPPING);
+    }
+
     private void typeIfGiven(By field, String resourceId, String value) {
         if (value == null || value.isEmpty()) {
             return;

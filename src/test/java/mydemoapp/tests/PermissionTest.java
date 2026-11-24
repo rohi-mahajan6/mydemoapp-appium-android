@@ -8,6 +8,7 @@ import mydemoapp.core.TestData;
 import mydemoapp.pages.CameraPage;
 import mydemoapp.pages.LocationPage;
 import mydemoapp.pages.system.SystemPermissionDialog;
+import org.openqa.selenium.WebDriverException;
 import org.testng.annotations.Test;
 
 import java.time.Duration;
@@ -91,7 +92,13 @@ public class PermissionTest extends BaseTest {
 
         // Set the position again now that the app listens, then ask the app to observe.
         app.setGeolocation(latitude, longitude);
-        Allure.addAttachment("Device position reported by Appium", String.valueOf(app.geolocation()));
+        // Diagnostics only: in CI run 45450932364 Appium could not read the position back
+        // ("Cannot execute the 'retrieve geolocation' action"). The check is what the screen shows.
+        try {
+            Allure.addAttachment("Device position reported by Appium", String.valueOf(app.geolocation()));
+        } catch (WebDriverException e) {
+            Allure.addAttachment("Device position reported by Appium (not available)", e.getMessage().split("\n")[0]);
+        }
         page.startObserving();
 
         LocationPage.Shown shown = page.waitForPosition(latitude, longitude, GPS_TOLERANCE_DEGREES, Duration.ofSeconds(30));

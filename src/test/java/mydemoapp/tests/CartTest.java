@@ -1,5 +1,6 @@
 package mydemoapp.tests;
 
+import io.qameta.allure.Allure;
 import io.qameta.allure.Description;
 import io.qameta.allure.Feature;
 import mydemoapp.core.TestData;
@@ -11,6 +12,7 @@ import mydemoapp.pages.LoginPage;
 import mydemoapp.pages.ProductDetailPage;
 import org.testng.annotations.Test;
 
+import java.time.Duration;
 import java.util.List;
 
 import static org.testng.Assert.assertEquals;
@@ -60,7 +62,13 @@ public class CartTest extends BaseTest {
         checkout.placeOrder();
         assertEquals(checkout.completeTitle(), "Checkout Complete");
         assertTrue(checkout.continueShoppingShown(), "Continue Shopping button shown");
-        assertEquals(header.cartCount(), 0, "cart emptied after the order");
+        // The app keeps the cart until Continue Shopping (CheckoutCompleteFragment.java:74); CI run
+        // 45450932364 showed a badge of 1 here. Record it rather than assert on it.
+        Allure.addAttachment("Cart badge on the Checkout Complete screen", String.valueOf(header.cartCount()));
+
+        checkout.continueShopping();
+        assertTrue(catalog.isShown(Duration.ofSeconds(10)), "catalog shown after Continue Shopping");
+        assertEquals(header.cartCount(), 0, "cart emptied after Continue Shopping");
     }
 
     @Test(description = "Reset App State empties the cart and logs out")
