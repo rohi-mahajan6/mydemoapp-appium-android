@@ -1,0 +1,14 @@
+{
+  "_source": "The accounts listed on the app's own login screen (res/layout/fragment_login.xml and res/values/strings.xml, tag 2.3.0).",
+  "password": "10203040",
+  "users": {
+    "standard": "bod@example.com",
+    "lockedOut": "alice@example.com",
+    "visual": "visual@example.com"
+  },
+  "messages": {
+    "usernameRequired": "Username is required",
+    "passwordRequired": "Enter Password",
+    "lockedOut": "Sorry this user has been locked out."
+  }
+}

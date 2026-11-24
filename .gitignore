@@ -1,0 +1,19 @@
+# Build output and reports
+target/
+site/
+artifacts/
+allure-results/
+allure-report/
+
+# The app under test is downloaded in CI, never committed
+apk/
+*.apk
+
+# IDE
+.idea/
+*.iml
+.vscode/
+
+# Local overrides and secrets
+.env
+*.local.properties

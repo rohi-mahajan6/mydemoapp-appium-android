@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<!-- One emulator, one Appium session at a time: no parallel runs. -->
+<suite name="My Demo App Android" parallel="false" verbose="1">
+  <listeners>
+    <listener class-name="mydemoapp.listeners.FailureArtifactsListener"/>
+  </listeners>
+  <test name="Android E2E" preserve-order="true">
+    <classes>
+      <class name="mydemoapp.tests.LoginTest"/>
+      <class name="mydemoapp.tests.CartTest"/>
+      <class name="mydemoapp.tests.BackgroundTest"/>
+      <class name="mydemoapp.tests.PermissionTest"/>
+    </classes>
+  </test>
+</suite>

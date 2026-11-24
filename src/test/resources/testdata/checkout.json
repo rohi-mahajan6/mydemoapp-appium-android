@@ -1,0 +1,22 @@
+{
+  "_source": "Test input for the checkout forms. Fictional address and the standard test card number.",
+  "address": {
+    "fullName": "Test Shopper",
+    "address1": "1 Test Street",
+    "address2": "",
+    "city": "Testville",
+    "state": "",
+    "zip": "12345",
+    "country": "Testland"
+  },
+  "payment": {
+    "fullName": "Test Shopper",
+    "cardNumber": "4111111111111111",
+    "expiration": "0330",
+    "securityCode": "123"
+  },
+  "geo": {
+    "latitude": 52.3676,
+    "longitude": 4.9041
+  }
+}
