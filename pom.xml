@@ -27,7 +27,9 @@
 
     <!-- Plugins -->
     <maven-compiler-plugin.version>3.16.0</maven-compiler-plugin.version>
-    <maven-surefire-plugin.version>3.6.1</maven-surefire-plugin.version>
+    <!-- 3.6.0+ runs TestNG on the JUnit Platform and no longer reads testng.xml (suite order,
+         listeners). Stay on 3.5.x while the suite is defined in testng.xml. -->
+    <maven-surefire-plugin.version>3.5.6</maven-surefire-plugin.version>
     <maven-enforcer-plugin.version>3.7.0</maven-enforcer-plugin.version>
 
     <!-- Run settings: override with -Dsuite=... -Dapk.path=... -Dappium.url=... -->
